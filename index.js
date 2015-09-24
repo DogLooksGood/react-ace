@@ -1,1 +1,1 @@
-module.exports = require('./src/ace.js');
+export { default } from './src/ace';

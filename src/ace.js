@@ -1,29 +1,28 @@
-var ace = require('brace');
-var React = require('react');
+import ace from 'brace';
+import React, { Component, findDOMNode, PropTypes } from 'react';
 
-module.exports = React.createClass({
-  displayName: 'ReactAce',
-  
-  propTypes: {
-    mode  : React.PropTypes.string,
-    theme : React.PropTypes.string,
-    name : React.PropTypes.string,
-    className: React.PropTypes.string,
-    height : React.PropTypes.string,
-    width : React.PropTypes.string,
-    fontSize : React.PropTypes.number,
-    showGutter : React.PropTypes.bool,
-    onChange: React.PropTypes.func,
-    value: React.PropTypes.string,
-    onLoad: React.PropTypes.func,
-    maxLines : React.PropTypes.number,
-    readOnly : React.PropTypes.bool,
-    highlightActiveLine : React.PropTypes.bool,
-    showPrintMargin : React.PropTypes.bool,
-    cursorStart: React.PropTypes.number,
-    editorProps: React.PropTypes.object
-  },
-  getDefaultProps: function() {
+export default class ReactAce extends Component {
+	static propTypes = {
+    mode  : PropTypes.string,
+    theme : PropTypes.string,
+    name : PropTypes.string,
+    className: PropTypes.string,
+    height : PropTypes.string,
+    width : PropTypes.string,
+    fontSize : PropTypes.number,
+    showGutter : PropTypes.bool,
+    onChange: PropTypes.func,
+    value: PropTypes.string,
+    onLoad: PropTypes.func,
+    maxLines : PropTypes.number,
+    readOnly : PropTypes.bool,
+    highlightActiveLine : PropTypes.bool,
+    showPrintMargin : PropTypes.bool,
+    cursorStart: PropTypes.number,
+    editorProps: PropTypes.object
+	};
+
+  getDefaultProps () {
     return {
       name   : 'brace-editor',
       mode   : '',
@@ -42,20 +41,19 @@ module.exports = React.createClass({
       cursorStart: 1,
       editorProps : {}
     };
-  },
-  onChange: function() {
-    var value = this.editor.getValue();
-    if (this.props.onChange) {
-      this.props.onChange(value);
-    }
-  },
-  componentDidMount: function() {
+  }
+
+	constructor (props, context) {
+		super(props, context);
+		
+	}
+
+  componentDidMount () {
     this.editor = ace.edit(this.props.name);
 
-    var editorProps = Object.keys(this.props.editorProps);
-    for (var i = 0; i < editorProps.length; i++) {
-      this.editor[editorProps[i]] = this.props.editorProps[editorProps[i]];
-    }
+		for (let prop in Object.keys(editorProps)) {
+			this.editor[prop] = this.props.editorProps[prop];
+		}
 
     this.editor.getSession().setMode('ace/mode/'+this.props.mode);
     this.editor.setTheme('ace/theme/'+this.props.theme);
@@ -71,13 +69,13 @@ module.exports = React.createClass({
     if (this.props.onLoad) {
       this.props.onLoad(this.editor);
     }
-  },
-  
-  componentWillUnmount: function() {
-    this.editor = null;
-  },
-  
-  componentWillReceiveProps: function(nextProps) {
+  }
+
+	componentWillUnmount () {
+		this.editor = null;
+	}
+
+  componentWillReceiveProps (nextProps) {
     this.editor = ace.edit(nextProps.name);
     this.editor.getSession().setMode('ace/mode/'+nextProps.mode);
     this.editor.setTheme('ace/theme/'+nextProps.theme);
@@ -93,14 +91,16 @@ module.exports = React.createClass({
     if (nextProps.onLoad) {
       nextProps.onLoad(this.editor);
     }
-  },
+	}
 
-  render: function() {
-    var divStyle = {
+	render () {
+    let divStyle = {
       width: this.props.width,
       height: this.props.height
     };
-    var className = this.props.className;
-    return (<div id={this.props.name} className={className} onChange={this.onChange} style={divStyle}></div>);
-  }
-});
+    let className = this.props.className;
+		return (
+			<div id={this.props.name} className={className} style={divStyle}></div>
+		);
+	}
+}
