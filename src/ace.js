@@ -100,7 +100,7 @@ export default class ReactAce extends Component {
     };
     let className = this.props.className;
 		return (
-			<div id={this.props.name} className={className} style={divStyle}></div>
+			<div onChange={::this.props.onChange} id={this.props.name} className={className} style={divStyle}></div>
 		);
 	}
 }
